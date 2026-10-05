@@ -20,7 +20,7 @@ To supply the hostname explicitly:
 curl -fsSL https://nopeus.xyz/install | bash -s -- --domain agents.customer.com
 ```
 
-Keep the printed enrollment link private. Installation does not modify DNS and does not automatically connect to Nopeus telemetry. Customer data stays on this server except messages sent to the model provider the customer chooses. Full organisation-profile and telemetry-activation onboarding are not part of release 0.2.0.
+Keep the printed enrollment link private. Installation does not modify DNS and does not automatically connect to Nopeus telemetry. Customer data stays on this server except messages sent to the model provider the customer chooses. Full organisation-profile and telemetry-activation onboarding are not part of release 0.2.1.
 
 ## Existing installations
 
