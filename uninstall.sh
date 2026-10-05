@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:3296054fe6741440dd46291c305e0b3d79900f3a8bfbefc3bf05458b458f23aa'
+BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:8d0588e1bc99141409144da17a0a597f86505ce86b23a2f055eb455be9d4361f'
 volume='nopeus-business-deployment'
 remove_images=false
 fail() { printf '\nNopeus Business: %s\n' "$*" >&2; exit 1; }
@@ -85,7 +85,7 @@ verify() {
 }
 # Stop the provisioner before rescanning so it cannot create more agent resources.
 for resource in "${containers[@]}"; do
-  [[ "$resource" == "nopeus-$instance-provisioner" ]] || continue
+  [[ "$resource" == "nopeus-$instance-provisioner" || "$resource" == "nopeus-$instance-worker" ]] || continue
   verify container "$resource"
   "${runner[@]}" stop --time 30 "$resource" >/dev/null
 done
