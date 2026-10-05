@@ -22,6 +22,10 @@ curl -fsSL https://nopeus.xyz/install | bash -s -- --domain agents.customer.com
 
 Keep the printed enrollment link private. Installation does not modify DNS and does not automatically connect to Nopeus telemetry. Customer data stays within the customer dashboard/worker deployment except messages sent to the model provider the customer chooses. Company details are saved locally. Telemetry activation is optional and separate from installation. Worker servers connect only to your customer dashboard over verified outbound HTTPS, and publish no control/runtime ports.
 
+## Conversations and messaging
+
+Web conversations are saved on the owning agent server and restore when you sign in again. Open an agent → ⋯ → Connections to configure the runtime’s native platforms, including Telegram and both WhatsApp methods. Customers supply their own platform credentials or complete native QR pairing. Some platforms require external bridges or webhook ingress. Pausing an agent also pauses its channel gateway. Credentials, transcripts and business content are excluded from Nopeus telemetry.
+
 ## Existing installations
 
 Stop an earlier failed Coolify Business application before using the same hostname, and preserve its volumes. The new installer does not migrate the old fixed-agent Compose deployment.
