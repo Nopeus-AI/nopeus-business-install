@@ -8,11 +8,11 @@ curl -fsSL https://nopeus.xyz/install | bash
 
 An existing Coolify Docker server works. The script requests sudo if needed, checks Docker, and runs the reviewed digest-pinned Business installer. It does not install or reconfigure Docker on your host.
 
-1. Point your dashboard hostname's DNS at this server. For private network access, use DNS that resolves correctly from the client/VPN network. HTTPS needs a working certificate resolver; default public certificate issuance needs reachable validation.
-2. Enter that hostname when prompted, without `https://` or a path.
-3. Confirm the detected SSH connection or choose private VPN/network access. From a browser terminal, visit https://nopeus.xyz/install-access/ on your device to get a command with access filled in automatically. The installer checks DNS resolution and asks you to confirm the server destination before starting services.
-4. Open the printed private setup link from your allowed network and create your workspace and administrator account.
-5. Choose and create your agents in the dashboard, including their purposes and provider/model credentials. No agents or provider keys are required to install the workspace.
+1. Enter your dashboard hostname and confirm the VPS ingress IP (a detected outbound address is offered as a default).
+2. Create the displayed DNS Type/Name/Value at the detected provider or your DNS provider, then type `done`. The installer verifies direct DNS resolution. Use Cloudflare DNS-only initially.
+3. Choose Public (sign in from any device) or Private (VPN/network allowlist). No browser or laptop IP approval is required.
+4. Choose web dashboard or terminal onboarding. Create company details, an administrator, and your own agents. Provider keys use hidden input in the CLI.
+5. To add VPSs, create a server join code in Workspace settings → Servers or CLI setup. Run the displayed `--join` command on each new VPS and paste its one-time code. Agents are placed on the server you select and managed from one dashboard.
 
 To supply the hostname explicitly:
 
@@ -20,7 +20,7 @@ To supply the hostname explicitly:
 curl -fsSL https://nopeus.xyz/install | bash -s -- --domain agents.customer.com
 ```
 
-Keep the printed enrollment link private. Installation does not modify DNS and does not automatically connect to Nopeus telemetry. Customer data stays on this server except messages sent to the model provider the customer chooses. Full organisation-profile and telemetry-activation onboarding are not part of release 0.2.3.
+Keep the printed enrollment link private. Installation does not modify DNS and does not automatically connect to Nopeus telemetry. Customer data stays within the customer dashboard/worker deployment except messages sent to the model provider the customer chooses. Company details are saved locally. Telemetry activation is optional and separate from installation. Worker servers connect only to your customer dashboard over verified outbound HTTPS, and publish no control/runtime ports.
 
 ## Existing installations
 
@@ -34,10 +34,12 @@ Installation adds `/usr/local/bin/nopeus` to the VPS. Run:
 
 ```sh
 nopeus upgrade
+nopeus access public
+nopeus setup
 nopeus uninstall
 ```
 
-Upgrade downloads the latest tested installer and preserves the saved domain, allowed networks, proxy settings, users and agent data. It does not ask you to set up DNS or access again. Back up before upgrading. The commands request sudo if needed.
+Upgrade each VPS to the same tested release. Existing private installations stay private until you run `nopeus access public`. `nopeus setup` offers company/account/agent/server onboarding in the terminal. Upgrade downloads the latest tested installer and preserves the saved domain, allowed networks, proxy settings, users and agent data. It does not ask you to set up DNS or access again. Back up before upgrading. The commands request sudo if needed.
 
 For an existing installation created before these commands were added, run this once to upgrade with saved settings and install the command:
 
@@ -53,7 +55,7 @@ Run on the deployment server:
 nopeus uninstall
 ```
 
-Review the listed resources and type `DELETE` to permanently delete the installation and all its customer data. Back up first. This preserves Docker, Coolify, other applications and DNS records. Add `--remove-images` to attempt removal of the pinned image cache; images still in use are retained. This targets installations created by the one-command installer, not legacy Compose deployments.
+Run uninstall on each worker VPS and then the dashboard; cleanup is local to that VPS and never erases another server remotely. Review the listed resources and type `DELETE` to permanently delete the installation and all its customer data. Back up first. This preserves Docker, Coolify, other applications and DNS records. Add `--remove-images` to attempt removal of the pinned image cache; images still in use are retained. This targets installations created by the one-command installer, not legacy Compose deployments.
 
 ## Inspect first
 
