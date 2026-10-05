@@ -3,17 +3,23 @@
 set -euo pipefail
 case "${1:---help}" in
   upgrade) endpoint=install; shift; args=(--upgrade "$@") ;;
+  access) endpoint=install; shift; [[ "${1:-}" == public || "${1:-}" == private ]] || { printf 'Use: nopeus access public | private\n' >&2; exit 1; }; mode=$1; shift; args=(--upgrade --access "$mode" "$@") ;;
+  setup) endpoint=install; shift; args=(--upgrade --setup cli "$@") ;;
+  join) endpoint=install; shift; [[ -n "${1:-}" ]] || { printf 'Use: nopeus join https://your-dashboard-domain\n' >&2; exit 1; }; args=(--join "$@") ;;
   uninstall) endpoint=uninstall; shift; args=("$@") ;;
   --help|help|-h) cat <<'HELP'
 Nopeus Business — run on your deployment server.
 
   nopeus upgrade     Upgrade to the latest tested release, keeping your settings and data.
+  nopeus access public|private   Set dashboard network access (login is always required).
+  nopeus setup       Configure your company, administrator and agents in this terminal.
+  nopeus join URL    Connect this VPS as a worker to your dashboard; enter its join code when prompted.
   nopeus uninstall   Remove this installation and its data after confirmation.
 
 Back up your deployment before upgrading or uninstalling.
 HELP
     exit 0 ;;
-  *) printf 'Unknown command. Use: nopeus upgrade | nopeus uninstall\n' >&2; exit 1 ;;
+  *) printf 'Unknown command. Use: nopeus help\n' >&2; exit 1 ;;
 esac
 command -v curl >/dev/null || { printf 'curl is required.\n' >&2; exit 1; }
 download=$(mktemp)
