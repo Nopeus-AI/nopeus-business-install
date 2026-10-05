@@ -3,7 +3,7 @@
 Run on your customer-owned Linux x86-64 server with Docker Engine 28 or newer:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/Nopeus-AI/nopeus-business-install/main/install.sh | bash
+curl -fsSL https://nopeus.xyz/install | bash
 ```
 
 An existing Coolify Docker server works. The script requests sudo if needed, checks Docker, and runs the reviewed digest-pinned Business installer. It does not install or reconfigure Docker on your host.
@@ -17,7 +17,7 @@ An existing Coolify Docker server works. The script requests sudo if needed, che
 To supply the hostname explicitly:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/Nopeus-AI/nopeus-business-install/main/install.sh | bash -s -- --domain agents.customer.com
+curl -fsSL https://nopeus.xyz/install | bash -s -- --domain agents.customer.com
 ```
 
 Keep the printed enrollment link private. Installation does not modify DNS and does not automatically connect to Nopeus telemetry. Customer data stays on this server except messages sent to the model provider the customer chooses. Full organisation-profile and telemetry-activation onboarding are not part of release 0.2.0.
