@@ -15,7 +15,9 @@ Usage: curl -fsSL INSTALLER_URL | bash
 
 Requires Docker Engine 28+ (already present on supported Coolify servers).
 Prompts use your terminal. Existing workspace data is preserved on reinstall.
-Additional arguments are passed to the reviewed Business installer.
+After installation: nopeus upgrade | nopeus uninstall
+Use --upgrade to upgrade an existing installation with saved settings.
+Additional installation arguments are passed to the reviewed Business installer.
 HELP
   exit 0
 fi
@@ -36,6 +38,92 @@ fi
 version=$("${runner[@]}" version --format '{{.Server.Version}}' 2>/dev/null) || fail 'Cannot reach Docker. Start the Docker service and retry.'
 major=${version%%.*}
 [[ "$major" =~ ^[0-9]+$ ]] && (( major >= 28 )) || fail 'Docker Engine 28 or newer is required.'
+
+
+install_command() {
+  local destination='/usr/local/bin/nopeus' command_tmp
+  local admin=()
+  [[ "$EUID" -eq 0 ]] || admin=(sudo)
+  if [[ -L "$destination" ]] || { [[ -e "$destination" ]] && ! owned_command "$destination"; }; then
+    fail 'Refusing to replace an existing unrelated /usr/local/bin/nopeus command.'
+  fi
+  command_tmp=$("${admin[@]}" mktemp "${destination%/*}/.nopeus.XXXXXX")
+  if ! {
+    "${admin[@]}" tee "$command_tmp" >/dev/null <<'NOPEUS_COMMAND'
+#!/usr/bin/env bash
+# Nopeus Business customer command.
+set -euo pipefail
+case "${1:---help}" in
+  upgrade) endpoint=install; shift; args=(--upgrade "$@") ;;
+  uninstall) endpoint=uninstall; shift; args=("$@") ;;
+  --help|help|-h) cat <<'HELP'
+Nopeus Business — run on your deployment server.
+
+  nopeus upgrade     Upgrade to the latest tested release, keeping your settings and data.
+  nopeus uninstall   Remove this installation and its data after confirmation.
+
+Back up your deployment before upgrading or uninstalling.
+HELP
+    exit 0 ;;
+  *) printf 'Unknown command. Use: nopeus upgrade | nopeus uninstall\n' >&2; exit 1 ;;
+esac
+command -v curl >/dev/null || { printf 'curl is required.\n' >&2; exit 1; }
+download=$(mktemp)
+trap 'rm -f -- "$download"' EXIT
+# Download completely before executing; a failed transfer never runs a partial script.
+curl -fsSL --connect-timeout 10 --max-time 120 "https://nopeus.xyz/$endpoint" -o "$download"
+bash "$download" "${args[@]}"
+NOPEUS_COMMAND
+    "${admin[@]}" chown 0:0 "$command_tmp" && "${admin[@]}" chmod 755 "$command_tmp" && "${admin[@]}" mv -fT "$command_tmp" "$destination"
+  }; then
+    "${admin[@]}" rm -f -- "$command_tmp"
+    fail 'Business is running, but the local nopeus command could not be installed.'
+  fi
+  printf '\nServer commands are ready: nopeus upgrade | nopeus uninstall\n'
+}
+owned_command() {
+  local line
+  { read -r line; read -r line; } < "$1"
+  [[ "$line" == '# Nopeus Business customer command.' ]]
+}
+
+# Refuse a name collision before changing an existing deployment.
+if [[ -L /usr/local/bin/nopeus ]] || { [[ -e /usr/local/bin/nopeus ]] && ! owned_command /usr/local/bin/nopeus; }; then
+  fail 'Refusing to replace an existing unrelated /usr/local/bin/nopeus command.'
+fi
+
+if [[ "${1:-}" == '--upgrade' ]]; then
+  [[ $# -eq 1 ]] || fail 'Upgrade uses saved installation settings; no additional arguments are needed.'
+  "${runner[@]}" volume inspect "$BUSINESS_VOLUME" >/dev/null 2>&1 || fail 'No installation found. Run the initial installer first.'
+  printf '\nUpgrading Nopeus Business to the latest tested release. Existing settings and data are preserved.\n'
+  saved=$("${runner[@]}" run --rm -i --network none --read-only --cap-drop ALL --security-opt no-new-privileges:true \
+    --user 10001:10001 -v "$BUSINESS_VOLUME:/deployment:ro" "$BUSINESS_IMAGE" python3 - "$BUSINESS_VOLUME" <<'PY_CONFIG'
+import json,re,sys
+from pathlib import Path
+c=json.loads(Path('/deployment/installation.json').read_text())
+assert re.fullmatch(r'[a-f0-9]{24}',c['instance']), 'Invalid installation identity'
+assert c['deployment_volume']==sys.argv[1], 'Deployment volume identity mismatch'
+assert c['mode'] in ('coolify','standalone','local'), 'Invalid deployment mode'
+assert type(c['port']) is int and 1024 <= c['port'] <= 65535, 'Invalid dashboard port'
+args=['--mode',c['mode'],'--port',str(c['port'])]
+for key,flag in [('proxy_network','--proxy-network'),('tls_resolver','--tls-resolver')]:
+    value=c[key]
+    assert isinstance(value,str) and re.fullmatch(r'[a-zA-Z0-9_.-]{1,80}',value), 'Invalid proxy setting'
+    args.extend([flag,value])
+if c['mode']!='local':
+    for key,flag in [('domain','--domain'),('allowed_ips','--allowed-ips')]:
+        value=c[key]
+        assert isinstance(value,str) and value and not any(x in value for x in '\r\n\0'), 'Invalid dashboard setting'
+        args.extend([flag,value])
+print('\n'.join(args))
+PY_CONFIG
+  ) || fail 'Cannot read the existing installation settings. Nothing changed.'
+  mapfile -t saved_args <<< "$saved"
+  "${runner[@]}" run --rm -it --user 0 -v /var/run/docker.sock:/var/run/docker.sock \
+    -v "$BUSINESS_VOLUME:/deployment" "$BUSINESS_IMAGE" python3 -m business.install "${saved_args[@]}" <&3
+  install_command
+  exit 0
+fi
 
 printf '\nInstalling Nopeus Business 0.2.1 on this server.\n'
 printf 'Accounts, agents, and provider keys are configured in the web dashboard.\n\n'
@@ -133,3 +221,5 @@ printf 'DNS resolution checked. HTTPS issuance and access from your device still
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v "$BUSINESS_VOLUME:/deployment" \
   "$BUSINESS_IMAGE" python3 -m business.install "$@" --domain "$host" "${access_args[@]}" <&3
+
+install_command
