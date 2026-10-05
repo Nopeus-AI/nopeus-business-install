@@ -2,7 +2,7 @@
 # Public distribution wrapper. Product source and customer configuration stay private.
 set -euo pipefail
 
-BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:3296054fe6741440dd46291c305e0b3d79900f3a8bfbefc3bf05458b458f23aa'
+BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:e8b86b234d161569b7041263d49d4b9073a26a02314aebcda49c7dccdaa75f23'
 BUSINESS_VOLUME='nopeus-business-deployment'
 
 fail() { printf '\nNopeus Business: %s\n' "$*" >&2; exit 1; }
@@ -37,7 +37,7 @@ version=$("${runner[@]}" version --format '{{.Server.Version}}' 2>/dev/null) || 
 major=${version%%.*}
 [[ "$major" =~ ^[0-9]+$ ]] && (( major >= 28 )) || fail 'Docker Engine 28 or newer is required.'
 
-printf '\nInstalling Nopeus Business 0.2.0 on this server.\n'
+printf '\nInstalling Nopeus Business 0.2.1 on this server.\n'
 printf 'Accounts, agents, and provider keys are configured in the web dashboard.\n\n'
 
 # An explicit setting (including one generated in the customer's browser) wins.
