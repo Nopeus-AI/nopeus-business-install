@@ -114,5 +114,13 @@ if "$remove_images"; then
     fi
   done
 fi
+# Remove only our own local command, after successful data cleanup.
+command_file='/usr/local/bin/nopeus'
+if [[ -f "$command_file" && ! -L "$command_file" ]]; then
+  { read -r first; read -r second; } < "$command_file"
+  if [[ "$second" == '# Nopeus Business customer command.' ]]; then
+    if [[ "$EUID" -eq 0 ]]; then rm -f -- "$command_file"; else sudo rm -f -- "$command_file"; fi
+  fi
+fi
 printf '\nNopeus Business and its customer data have been removed.\n'
 printf 'Remove the dashboard DNS record separately if it is no longer needed.\n'
