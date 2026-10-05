@@ -10,7 +10,7 @@ An existing Coolify Docker server works. The script requests sudo if needed, che
 
 1. Point your dashboard hostname's DNS at this server. For private network access, use DNS that resolves correctly from the client/VPN network. HTTPS needs a working certificate resolver; default public certificate issuance needs reachable validation.
 2. Enter that hostname when prompted, without `https://` or a path.
-3. Enter your client/VPN IP ranges. Press Enter for private ranges. A public VPN exit address must be explicitly allowed (a single IPv4 address uses `/32`).
+3. Confirm the detected SSH connection or choose private VPN/network access. From a browser terminal, visit https://nopeus.xyz/install-access/ on your device to get a command with access filled in automatically. The installer checks DNS resolution and asks you to confirm the server destination before starting services.
 4. Open the printed private setup link from your allowed network and create your workspace and administrator account.
 5. Choose and create your agents in the dashboard, including their purposes and provider/model credentials. No agents or provider keys are required to install the workspace.
 
