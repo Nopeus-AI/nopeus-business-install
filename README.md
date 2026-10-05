@@ -28,12 +28,29 @@ Stop an earlier failed Coolify Business application before using the same hostna
 
 Re-running the installer uses the same `nopeus-business-deployment` named volume and preserves existing workspace accounts and agent state. This script is pinned to a tested release. Updates are published after release checks pass. Back up the deployment configuration, dashboard state, and all agent state volumes together before upgrading. Do not delete volumes to troubleshoot.
 
+## Server commands
+
+Installation adds `/usr/local/bin/nopeus` to the VPS. Run:
+
+```sh
+nopeus upgrade
+nopeus uninstall
+```
+
+Upgrade downloads the latest tested installer and preserves the saved domain, allowed networks, proxy settings, users and agent data. It does not ask you to set up DNS or access again. Back up before upgrading. The commands request sudo if needed.
+
+For an existing installation created before these commands were added, run this once to upgrade with saved settings and install the command:
+
+```sh
+curl -fsSL https://nopeus.xyz/install | bash -s -- --upgrade
+```
+
 ## Uninstall
 
 Run on the deployment server:
 
 ```sh
-curl -fsSL https://nopeus.xyz/uninstall | bash
+nopeus uninstall
 ```
 
 Review the listed resources and type `DELETE` to permanently delete the installation and all its customer data. Back up first. This preserves Docker, Coolify, other applications and DNS records. Add `--remove-images` to attempt removal of the pinned image cache; images still in use are retained. This targets installations created by the one-command installer, not legacy Compose deployments.
