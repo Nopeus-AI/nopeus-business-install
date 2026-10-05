@@ -36,7 +36,7 @@ if ! "${runner[@]}" volume inspect "$volume" >/dev/null 2>&1; then
 fi
 # Read only the identity and image digests; never print installation secrets.
 metadata=$("${runner[@]}" run --rm -i --network none --read-only --cap-drop ALL \
-  --security-opt no-new-privileges:true --user 0 \
+  --security-opt no-new-privileges:true --user 10001:10001 \
   -v "$volume:/deployment:ro" "$BUSINESS_IMAGE" python3 - "$volume" <<'PY'
 import json,re,sys
 from pathlib import Path
