@@ -2,7 +2,7 @@
 # Public distribution wrapper. Product source and customer configuration stay private.
 set -euo pipefail
 
-BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:e8b86b234d161569b7041263d49d4b9073a26a02314aebcda49c7dccdaa75f23'
+BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:8ffd173289983d5efc6dd5590f5e3dfd4ad553f10e385e3768e448149ae1acb6'
 BUSINESS_VOLUME='nopeus-business-deployment'
 
 fail() { printf '\nNopeus Business: %s\n' "$*" >&2; exit 1; }
@@ -125,7 +125,7 @@ PY_CONFIG
   exit 0
 fi
 
-printf '\nInstalling Nopeus Business 0.2.1 on this server.\n'
+printf '\nInstalling Nopeus Business 0.2.2 on this server.\n'
 printf 'Accounts, agents, and provider keys are configured in the web dashboard.\n\n'
 
 # An explicit setting (including one generated in the customer's browser) wins.
