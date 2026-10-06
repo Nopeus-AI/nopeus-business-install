@@ -24,7 +24,13 @@ Keep the printed enrollment link private. Installation does not modify DNS and d
 
 ## Conversations and messaging
 
-Web conversations are saved on the owning agent server and restore when you sign in again. Open an agent → ⋯ → Connections to configure the runtime’s native platforms, including Telegram and both WhatsApp methods. Customers supply their own platform credentials or complete native QR pairing. Some platforms require external bridges or webhook ingress. Pausing an agent also pauses its channel gateway. Credentials, transcripts and business content are excluded from Nopeus telemetry.
+Web conversations are saved on the owning agent server and restore when you sign in again. Open an agent → Channels in its chat header to configure the runtime’s native platforms, including Telegram and both WhatsApp methods. Customers supply their own platform credentials or complete native QR pairing. Some platforms require external bridges or webhook ingress. Pausing an agent also pauses its channel gateway. Credentials, transcripts and business content are excluded from Nopeus telemetry.
+
+## Continue setup and change connections
+
+Unfinished agent setup saves one draft to your workspace account. Close it or choose Save for later, then use Continue setup in the sidebar to resume, including from another device. Unsaved API keys are excluded from drafts; enter them again when you return. An agent awaiting account sign-in shows its own Continue setup action.
+
+Click the model button in an agent's chat header to change its provider or model. Connected backups can become the primary without re-entering their stored keys. Channels opens platform setup directly and protects unsaved edits. An unexpired pairing can continue after reopening in the same browser tab. Settings → General offers Dark, Light and System.
 
 ## Existing installations
 
