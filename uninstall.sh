@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:2df1422b9dfcba974a9f1a9bf7e1b9587e59672b249839b79f3b7d71785f2f42'
+BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:3383dc60b8b4b5b1969abd1abfa327d04d2ce95df5811c9d43f7babd82ab40a3'
 volume='nopeus-business-deployment'
 remove_images=false
 fail() { printf '\nNopeus Business: %s\n' "$*" >&2; exit 1; }
