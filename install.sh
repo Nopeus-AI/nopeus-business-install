@@ -2,7 +2,7 @@
 # Public distribution wrapper. Product source and customer configuration stay private.
 set -euo pipefail
 
-BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:3383dc60b8b4b5b1969abd1abfa327d04d2ce95df5811c9d43f7babd82ab40a3'
+BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:8073f6f2e9643faffdedb3cd7402cba371ee1d514776d53d4910fc9c64b9a55a'
 BUSINESS_VOLUME='nopeus-business-deployment'
 
 fail() { printf '\nNopeus Business: %s\n' "$*" >&2; exit 1; }
