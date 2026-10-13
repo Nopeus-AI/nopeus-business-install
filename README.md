@@ -20,6 +20,8 @@ To supply the hostname explicitly:
 curl -fsSL https://nopeus.xyz/install | bash -s -- --domain agents.customer.com
 ```
 
+License enforcement is temporarily paused. Workspace setup and agent operation do not require license activation or a license server. Automatic license polling and license usage reporting are paused too.
+
 Keep the printed enrollment link private. Installation does not modify DNS and does not automatically connect to Nopeus telemetry. Customer data stays within the customer dashboard/worker deployment except messages sent to the model provider the customer chooses. Company details are saved locally. Telemetry activation is optional and separate from installation. Worker servers connect only to your customer dashboard over verified outbound HTTPS, and publish no control/runtime ports.
 
 ## Conversations and messaging
