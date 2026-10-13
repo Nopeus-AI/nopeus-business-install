@@ -26,6 +26,14 @@ Keep the printed enrollment link private. Installation does not modify DNS and d
 
 Web conversations are saved on the owning agent server and restore when you sign in again. Open an agent → Channels in its chat header to configure the runtime’s native platforms, including Telegram and both WhatsApp methods. Customers supply their own platform credentials or complete native QR pairing. Some platforms require external bridges or webhook ingress. Pausing an agent also pauses its channel gateway. Credentials, transcripts and business content are excluded from Nopeus telemetry.
 
+## Agent collaboration
+
+Business 0.7.0 adds optional collaboration in dashboard chats. Open an agent's options menu → Agent collaboration to enable temporary helpers, choose existing agents it may contact, and limit each turn to 1–4 child tasks. The person starting the chat must have Operator access to every target. Child tasks return findings to the parent and cannot delegate further. The chat shows progress and results and offers Cancel run. Extra calls use your connected provider accounts; model calls already dispatched may finish after cancellation. Upgrade the dashboard and every worker to the same version.
+
+## Agent screen
+
+Business 0.7.0 adds a monitor button beside an agent's chat. It opens a read-only screen sidebar with refreshed desktop images, fullscreen viewing, and a full-width view on phones. Upgrade the dashboard and each worker VPS to the same release. An idle agent shows a waiting state until its desktop is running. Computer tools remain disabled by default; the viewer does not grant desktop actions or bypass write approvals.
+
 ## Continue setup and change connections
 
 Unfinished agent setup saves one draft to your workspace account. Close it or choose Save for later, then use Continue setup in the sidebar to resume, including from another device. Unsaved API keys are excluded from drafts; enter them again when you return. An agent awaiting account sign-in shows its own Continue setup action.
