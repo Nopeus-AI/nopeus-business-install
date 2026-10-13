@@ -2,7 +2,8 @@
 # Public distribution wrapper. Product source and customer configuration stay private.
 set -euo pipefail
 
-BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:8073f6f2e9643faffdedb3cd7402cba371ee1d514776d53d4910fc9c64b9a55a'
+BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:5a66ef261d37196c5396a3fb220202fac1a641d3a0c8acc9eb1eceff4b29ecef'
+BUSINESS_RELEASE='0.7.0'
 BUSINESS_VOLUME='nopeus-business-deployment'
 
 fail() { printf '\nNopeus Business: %s\n' "$*" >&2; exit 1; }
@@ -108,7 +109,7 @@ if [[ "${1:-}" == '--upgrade' ]]; then
     esac
   done
   "${runner[@]}" volume inspect "$BUSINESS_VOLUME" >/dev/null 2>&1 || fail 'No installation found. Run the initial installer first.'
-  printf '\nUpgrading Nopeus Business to the latest tested release. Existing settings and data are preserved.\n'
+  printf '\nUpgrading Nopeus Business to %s. Existing settings and data are preserved.\n' "$BUSINESS_RELEASE"
   saved=$("${runner[@]}" run --rm -i --network none --read-only --cap-drop ALL --security-opt no-new-privileges:true \
     --user 10001:10001 -v "$BUSINESS_VOLUME:/deployment:ro" "$BUSINESS_IMAGE" python3 - "$BUSINESS_VOLUME" <<'PY_CONFIG'
 import json,re,sys
