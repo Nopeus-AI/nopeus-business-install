@@ -28,11 +28,11 @@ Web conversations are saved on the owning agent server and restore when you sign
 
 ## Agent collaboration
 
-Business 0.7.0 adds optional collaboration in dashboard chats. Open an agent's options menu → Agent collaboration to enable temporary helpers, choose existing agents it may contact, and limit each turn to 1–4 child tasks. The person starting the chat must have Operator access to every target. Child tasks return findings to the parent and cannot delegate further. The chat shows progress and results and offers Cancel run. Extra calls use your connected provider accounts; model calls already dispatched may finish after cancellation. Upgrade the dashboard and every worker to the same version.
+Business 0.7.1 makes collaboration automatic in dashboard chats. Agents decide when to use temporary helpers or delegate work to another active agent the person starting the chat can operate. No collaboration setup is required. Each turn can use up to four child tasks; children return findings to the parent and cannot delegate further. The chat shows progress and results and offers Cancel run. Extra calls use your connected provider accounts; model calls already dispatched may finish after cancellation. Upgrade the dashboard and every worker to the same version.
 
 ## Agent screen
 
-Business 0.7.0 adds a monitor button beside an agent's chat. It opens a read-only screen sidebar with refreshed desktop images, fullscreen viewing, and a full-width view on phones. Upgrade the dashboard and each worker VPS to the same release. An idle agent shows a waiting state until its desktop is running. Computer tools remain disabled by default; the viewer does not grant desktop actions or bypass write approvals.
+Business 0.7.1 adds a monitor button beside an agent's chat. It opens a read-only screen sidebar with refreshed desktop images, fullscreen viewing, and a full-width view on phones. Upgrade the dashboard and each worker VPS to the same release. An idle agent shows a waiting state until its desktop is running. Computer tools remain disabled by default; the viewer does not grant desktop actions or bypass write approvals.
 
 ## Continue setup and change connections
 
@@ -57,7 +57,7 @@ nopeus setup
 nopeus uninstall
 ```
 
-Upgrade each VPS to the same tested release. Existing private installations stay private until you run `nopeus access public`. `nopeus setup` offers company/account/agent/server onboarding in the terminal. Upgrade downloads the latest tested installer and preserves the saved domain, allowed networks, proxy settings, users and agent data. It does not ask you to set up DNS or access again. Back up before upgrading. The commands request sudo if needed.
+Upgrade each VPS to the same tested release. Existing private installations stay private until you run `nopeus access public`. `nopeus setup` offers company/account/agent/server onboarding in the terminal. Upgrade downloads the latest tested installer and preserves the saved domain, allowed networks, proxy settings, users and agent data. If the saved release image already matches the latest tested release, it reports "Already on the latest version" and skips image downloads and deployment changes. It does not ask you to set up DNS or access again. Back up before upgrading. The commands request sudo if needed.
 
 For an existing installation created before these commands were added, run this once to upgrade with saved settings and install the command:
 
