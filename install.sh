@@ -3,7 +3,7 @@
 set -euo pipefail
 
 BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:5a66ef261d37196c5396a3fb220202fac1a641d3a0c8acc9eb1eceff4b29ecef'
-BUSINESS_RELEASE='0.7.0'
+BUSINESS_RELEASE='0.7.1'
 BUSINESS_VOLUME='nopeus-business-deployment'
 
 fail() { printf '\nNopeus Business: %s\n' "$*" >&2; exit 1; }
@@ -109,9 +109,21 @@ if [[ "${1:-}" == '--upgrade' ]]; then
     esac
   done
   "${runner[@]}" volume inspect "$BUSINESS_VOLUME" >/dev/null 2>&1 || fail 'No installation found. Run the initial installer first.'
-  printf '\nUpgrading Nopeus Business to %s. Existing settings and data are preserved.\n' "$BUSINESS_RELEASE"
+  # Read settings with a locally installed image before downloading the new release.
+  installed_images=$("${runner[@]}" ps -a --filter "volume=$BUSINESS_VOLUME" \
+    --filter 'label=xyz.nopeus.business.role' \
+    --format '{{.Label "xyz.nopeus.business.role"}} {{.Image}}') \
+    || fail 'Cannot inspect the existing installation. Nothing changed.'
+  settings_image=$BUSINESS_IMAGE
+  while read -r role image; do
+    [[ "$role" == provisioner || "$role" == worker ]] || continue
+    if [[ "$image" =~ ^ghcr\.io/nopeus-ai/nopeus-business-control@sha256:[a-f0-9]{64}$ ]]; then
+      settings_image=$image
+      break
+    fi
+  done <<< "$installed_images"
   saved=$("${runner[@]}" run --rm -i --network none --read-only --cap-drop ALL --security-opt no-new-privileges:true \
-    --user 10001:10001 -v "$BUSINESS_VOLUME:/deployment:ro" "$BUSINESS_IMAGE" python3 - "$BUSINESS_VOLUME" <<'PY_CONFIG'
+    --user 10001:10001 -v "$BUSINESS_VOLUME:/deployment:ro" "$settings_image" python3 - "$BUSINESS_VOLUME" "$BUSINESS_IMAGE" "${#overrides[@]}" <<'PY_CONFIG'
 import json,re,sys
 from pathlib import Path
 c=json.loads(Path('/deployment/installation.json').read_text())
@@ -135,10 +147,19 @@ elif c['mode']!='local':
         value=c[key]
         assert isinstance(value,str) and not any(x in value for x in '\r\n\0'), 'Invalid dashboard setting'
         if value: args.extend([flag,value])
-args.append('--upgrade')
-print('\n'.join(args))
+if c.get('control_image') == sys.argv[2] and sys.argv[3] == '0':
+    print('already-current')
+else:
+    args.append('--upgrade')
+    print('\n'.join(args))
 PY_CONFIG
   ) || fail 'Cannot read the existing installation settings. Nothing changed.'
+  if [[ "$saved" == already-current ]]; then
+    printf '\nAlready on the latest version of Nopeus Business (%s).\n' "$BUSINESS_RELEASE"
+    [[ -e /usr/local/bin/nopeus ]] || install_command
+    exit 0
+  fi
+  printf '\nUpgrading Nopeus Business to %s. Existing settings and data are preserved.\n' "$BUSINESS_RELEASE"
   mapfile -t saved_args <<< "$saved"
   "${runner[@]}" run --rm -it --user 0 -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$BUSINESS_VOLUME:/deployment" "$BUSINESS_IMAGE" python3 -m business.install "${saved_args[@]}" "${overrides[@]}" <&3
