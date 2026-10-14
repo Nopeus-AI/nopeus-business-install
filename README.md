@@ -30,11 +30,11 @@ Web conversations are saved on the owning agent server and restore when you sign
 
 ## Agent collaboration
 
-Business 0.7.3 makes collaboration automatic in dashboard chats. Agents decide when to use temporary helpers or delegate work to another active agent the person starting the chat can operate. No collaboration setup is required. Each turn can use up to four child tasks; children return findings to the parent and cannot delegate further. The chat shows progress and results and offers Cancel run. Extra calls use your connected provider accounts; model calls already dispatched may finish after cancellation. Upgrade the dashboard and every worker to the same version.
+Business 0.7.4 makes collaboration automatic in dashboard chats. Agents decide when to use temporary helpers or delegate work to another active agent the person starting the chat can operate. No collaboration setup is required. Each turn can use up to four child tasks; children return findings to the parent and cannot delegate further. The chat shows progress and results and offers Cancel run. Extra calls use your connected provider accounts; model calls already dispatched may finish after cancellation. Upgrade the dashboard and every worker to the same version.
 
 ## Agent screen
 
-Business 0.7.3 has one workspace sidebar with Output and Screen tabs. Open it from the chat header. Output shows the latest successful response in the selected conversation and supports copying; it is a view of the reply, not a separate document. Screen shows the agent's desktop with fullscreen viewing and browser navigation, click, and typing controls. Switching to Output or closing the sidebar stops frame loading. On phones the sidebar fills the chat area. An idle agent shows a waiting state until its desktop is running. Upgrade the dashboard and each worker VPS to the same release. The agent screen follows the selected agent's access grant; it does not bypass business-write approvals.
+Business 0.7.4 has one workspace sidebar with Output and Screen tabs. Open it from the chat header. Output shows the latest successful response in the selected conversation and supports copying; it is a view of the reply, not a separate document. Screen shows the agent's desktop with fullscreen viewing and browser navigation, click, and typing controls. Switching to Output or closing the sidebar stops frame loading. On phones the sidebar fills the chat area. An idle agent shows a waiting state until its desktop is running. Upgrade the dashboard and each worker VPS to the same release. The agent screen follows the selected agent's access grant; it does not bypass business-write approvals.
 
 ## Continue setup and change connections
 
