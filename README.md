@@ -30,11 +30,17 @@ Web conversations are saved on the owning agent server and restore when you sign
 
 ## Agent collaboration
 
-Business 0.7.4 makes collaboration automatic in dashboard chats. Agents decide when to use temporary helpers or delegate work to another active agent the person starting the chat can operate. No collaboration setup is required. Each turn can use up to four child tasks; children return findings to the parent and cannot delegate further. The chat shows progress and results and offers Cancel run. Extra calls use your connected provider accounts; model calls already dispatched may finish after cancellation. Upgrade the dashboard and every worker to the same version.
+Business 0.7.5 makes collaboration automatic in dashboard chats. Agents decide when to use temporary helpers or delegate work to another active agent the person starting the chat can operate. No collaboration setup is required. Each turn can use up to four child tasks; children return findings to the parent and cannot delegate further. The chat shows progress and results and offers Cancel run. Extra calls use your connected provider accounts; model calls already dispatched may finish after cancellation. Upgrade the dashboard and every worker to the same version.
 
 ## Agent screen
 
-Business 0.7.4 has one workspace sidebar with Output and Screen tabs. Open it from the chat header. Output shows the latest successful response in the selected conversation and supports copying; it is a view of the reply, not a separate document. Screen shows the agent's desktop with fullscreen viewing and browser navigation, click, and typing controls. Switching to Output or closing the sidebar stops frame loading. On phones the sidebar fills the chat area. An idle agent shows a waiting state until its desktop is running. Upgrade the dashboard and each worker VPS to the same release. The agent screen follows the selected agent's access grant; it does not bypass business-write approvals.
+Business 0.7.5 has one workspace sidebar with Output and Screen tabs. Open it from the chat header. Output shows the latest successful response in the selected conversation and supports copying; it is a view of the reply, not a separate document. Screen shows the agent's desktop with fullscreen viewing and browser navigation, click, and typing controls. Switching to Output or closing the sidebar stops frame loading. On phones the sidebar fills the chat area. An idle agent shows a waiting state until its desktop is running. Upgrade the dashboard and each worker VPS to the same release. The agent screen follows the selected agent's access grant. Dashboard approvals record decisions; native tools can perform writes and do not use those records as an authorization gate.
+
+## Shared Apps and Credentials
+
+Business 0.7.5 adds Settings → Apps and Credentials. Save generic API or remote HTTPS MCP connections once, then choose which agents can use them in Setup & connections. Applied connections stay in the agent runtime across web and messaging channels. Dedicated integrations such as HubSpot and Shopify will be added over time.
+
+Credentials support individual access, an explicit all-credentials grant, secret replacement, and Chrome/Apple Passwords CSV import. Back up the dashboard database together with its adjacent connections.key and agent volumes. This release uses database schema 10; rollback requires a matching pre-upgrade backup. Native Hermes plugin and skill setup remains available through the CLI.
 
 ## Continue setup and change connections
 
