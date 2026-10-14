@@ -2,8 +2,8 @@
 # Public distribution wrapper. Product source and customer configuration stay private.
 set -euo pipefail
 
-BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:ad7546277395d2ab20edbd2d01eef17eba7f9790a56b2eaa5d2b224e8cdb890c'
-BUSINESS_RELEASE='0.7.2'
+BUSINESS_IMAGE='ghcr.io/nopeus-ai/nopeus-business-control@sha256:420cdc60052afa2020bad893131618ee1453057460ccc7c4a87de4a56105137b'
+BUSINESS_RELEASE='0.7.3'
 BUSINESS_VOLUME='nopeus-business-deployment'
 
 fail() { printf '\nNopeus Business: %s\n' "$*" >&2; exit 1; }
@@ -31,6 +31,8 @@ if ! { exec 3<>/dev/tty; } 2>/dev/null; then
   fail 'An interactive terminal is required. Connect with SSH and run the installer there.'
 fi
 runner=(docker)
+# The host's own name (the output of `hostname`), shown to Nopeus as this install's device name. The installer validates it.
+host_name=$(hostname 2>/dev/null || true)
 if [[ "$EUID" -ne 0 ]]; then
   command -v sudo >/dev/null 2>&1 || fail 'Run as root, or install sudo to authorize Docker setup.'
   sudo -v <&3 || fail 'Administrator access is required for installation.'
@@ -161,7 +163,7 @@ PY_CONFIG
   fi
   printf '\nUpgrading Nopeus Business to %s. Existing settings and data are preserved.\n' "$BUSINESS_RELEASE"
   mapfile -t saved_args <<< "$saved"
-  "${runner[@]}" run --rm -it --user 0 -v /var/run/docker.sock:/var/run/docker.sock \
+  "${runner[@]}" run --rm -it --user 0 -e "NOPEUS_DEVICE_NAME=$host_name" -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$BUSINESS_VOLUME:/deployment" "$BUSINESS_IMAGE" python3 -m business.install "${saved_args[@]}" "${overrides[@]}" <&3
   install_command
   exit 0
@@ -170,6 +172,7 @@ fi
 printf '\nInstalling Nopeus Business on this server.\n'
 install_command
 "${runner[@]}" run --rm -it --user 0 \
+  -e "NOPEUS_DEVICE_NAME=$host_name" \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v "$BUSINESS_VOLUME:/deployment" \
   "$BUSINESS_IMAGE" python3 -m business.install "$@" <&3
