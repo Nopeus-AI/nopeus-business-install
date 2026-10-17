@@ -34,7 +34,7 @@ Agent collaboration is automatic in dashboard chats. Agents decide when to use t
 
 ## Agent screen
 
-Business 0.8.4 has one workspace sidebar with Tasks, Automations, and Screen tabs. Open it from the chat header. Tasks lists current and completed child work across conversations. Automations lists scheduled jobs from the agent's Hermes runtime, including jobs created in chat. Screen shows the agent's desktop with fullscreen viewing and browser navigation, click, and typing controls. Switching tabs or closing the sidebar stops frame loading. On phones the sidebar fills the chat area. An idle agent shows a waiting state until its desktop is running. Upgrade the dashboard and each worker VPS to the same release. The agent screen follows the selected agent's access grant. Dashboard approvals record decisions; native tools can perform writes and do not use those records as an authorization gate.
+Business 0.8.5 has one workspace sidebar with Tasks, Automations, and Screen tabs. Open it from the chat header. Tasks lists current and completed child work across conversations. Automations lists scheduled jobs from the agent's Hermes runtime, including jobs created in chat. Screen shows the agent's desktop with fullscreen viewing and browser navigation, click, and typing controls. Switching tabs or closing the sidebar stops frame loading. On phones the sidebar fills the chat area. An idle agent shows a waiting state until its desktop is running. Upgrade the dashboard and each worker VPS to the same release. The agent screen follows the selected agent's access grant. Dashboard approvals record decisions; native tools can perform writes and do not use those records as an authorization gate.
 
 ## Shared Apps and Credentials
 
